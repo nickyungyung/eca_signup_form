@@ -8,7 +8,7 @@ from functools import partial
 
 class Communicate(QObject):
 
-    saveApp =       pyqtSignal()
+    saveApp       = pyqtSignal()
     updatedateApp = pyqtSignal()
     # tablesignal =   pyqtSignal()
 
@@ -36,7 +36,6 @@ class UI_Window(QMainWindow):
         self.c.saveApp.connect(self.content.handleSave)
         # self.c.updatedateApp.connect(self.content.getInteger)
 
-
         self.openAct = QAction('Open', self)
         self.openAct.setShortcut('Ctrl+O')
         self.openAct.setStatusTip('Open file, looping multiple instances not recommended, only for minimal changes.')
@@ -46,7 +45,6 @@ class UI_Window(QMainWindow):
         self.saveAct.setShortcut('Ctrl+S')
         self.saveAct.setStatusTip('Save file')
         self.saveAct.triggered.connect(self.content.handleSave)
-
 
         # self.exitAct = QAction(QIcon('exit.png'), '&Exit', self)
         # self.exitAct.setShortcut('Ctrl+Q')
@@ -199,7 +197,6 @@ class Content(QWidget):
         # self.vbox1.setStretch(1,1)
         self.setLayout(self.vbox1)
 
-
     def handleSave(self):
         path = QFileDialog.getSaveFileName(self, 'Save File', '.csv', 'CSV(*.csv)')[0]
 
@@ -209,8 +206,6 @@ class Content(QWidget):
             with open(path, 'w', encoding='big5-hkscs') as stream:
                 writer = csv.writer(stream)
                 for row in range(0, self.table.rowCount()):
-
-
                     if row == 0:
                         rowdata = []
                         rowdata.extend(('Name', 'Starting Time', 'Duration', 'Booking Date', 'Booking Time', 'Booking Location'))
@@ -218,12 +213,9 @@ class Content(QWidget):
                         rowdata.append('%s' %['', 'F', 'Y', 'S'][self.location.currentIndex()])
                         writer.writerow(rowdata)
 
-
                     else:
                         rowdata = []
                         for column in range(self.table.columnCount()):
-
-
                             if column == 5:
 
                                 item = self.table.cellWidget(row, column)
@@ -239,7 +231,6 @@ class Content(QWidget):
                                     rowdata.append('S')
 
                             elif column == 3:
-
                                 item = self.table.cellWidget(row, column)
 
                                 # this is setting the location
@@ -342,11 +333,8 @@ class Content(QWidget):
         self.table.setItem(row, column, QTableWidgetItem(self.date.toString()))
         print(self.date.toString())
 
-
-
-
     # def showDate(self, date, row,column):
-
+    #     pass
 
     # def getInteger(self, row, column):
     #     i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", 28, 0, 100, 1)
@@ -356,14 +344,11 @@ class Content(QWidget):
     #         self.column = column
     #         self.e.updatedateApp.emit()
 
-
     # def updateInteger(self):
-
     #     self.table.setItem(self.row, self.column, QTableWidgetItem(self.integer))
 
 
 if __name__ == '__main__':
-
     app = QApplication(sys.argv)
     ex = UI_Window()
     sys.exit(app.exec_())

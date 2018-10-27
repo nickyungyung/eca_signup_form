@@ -1,0 +1,13 @@
+.DS_Store/
+.vscode/
+*.swp
+*.csv
+
+*.pyc
+__pycache__/
+
+.pytest_cache/
+.coverage
+
+build/
+*.egg-info/
