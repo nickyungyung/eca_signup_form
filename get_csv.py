@@ -188,7 +188,6 @@ class Content(QWidget):
                 for row in range(1, self.table.rowCount()):
                     for column in range(self.table.columnCount()):
                         if column == 5:
-
                             item = self.table.cellWidget(row, column)
 
                             # this is setting the location
@@ -203,8 +202,6 @@ class Content(QWidget):
                             # this is setting the location
                             if item.text() != 'Choose Time':
                                 rowdata.append(item.text())
-                            elif item.text() == 'Choose Time':
-                                rowdata.append('')
                             else:
                                 rowdata.append('')
 
