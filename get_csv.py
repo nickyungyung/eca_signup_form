@@ -108,52 +108,34 @@ class Content(QWidget):
         # self.table.setSelection
         self.table.setFont(QFont('SansSerif', 12))
 
+        self.table.setItem(0,0,QTableWidgetItem('Eric Yung'))
+        self.table.setItem(0,1,QTableWidgetItem('14:00'))         # select
+        self.table.setItem(0,2,QTableWidgetItem('2'))             # select
+        self.table.setItem(0,3,QTableWidgetItem('10-15'))         # calendar
+        # self.table.setItem(0,4,QTableWidgetItem('20-01'))         # calendar
+        self.table.setItem(0,4,QTableWidgetItem('14:00-16:00'))   # time range
+        self.table.setItem(0,5,QTableWidgetItem('FoTan/ YauMaTei/ ShekMun'))             # selection
+
+        # Todo: Replace hardcoded columns with variables
         for row in range(rows):
-            if row == 0:
-                self.table.setItem(0,0,QTableWidgetItem('Eric Yung'))
-                self.table.setItem(0,1,QTableWidgetItem('14:00'))         # select
-                self.table.setItem(0,2,QTableWidgetItem('2'))             # select
-                self.table.setItem(0,3,QTableWidgetItem('10-15'))         # calendar
-                # self.table.setItem(0,4,QTableWidgetItem('20-01'))         # calendar
-                self.table.setItem(0,4,QTableWidgetItem('14:00-16:00'))   # time range
-                self.table.setItem(0,5,QTableWidgetItem('FoTan/ YauMaTei/ ShekMun'))             # selection
+            # Set empty text boxes
+            empty_text_cols = (0, 1, 2, 4)
+            for col in empty_text_cols:
+                item = QTableWidgetItem('')
+                self.table.setItem(row, col, item)
 
-            else:
-                for column in range(columns):
+            # Set column 3 calender button
+            btn = QPushButton('Choose Time')
+            btn.clicked.connect(partial(self.calendar, row, 3))  # hardcode
+            self.table.setCellWidget(row, 3, btn)  # hardcode
 
-                    if column == 3:
-
-                        btn = QPushButton('Choose Time')
-                        self.table.setCellWidget(row, column, btn)
-
-                        btn.clicked.connect(partial(self.calendar, row, column))
-
-                        # def signal_index(self):
-                        #     si = pyqtSignal()
-                        #     si.connect()
-
-                        # self.table.setItem(row, column, QTableWidgetItem(date.toString()))
-
-                        # connect(tableView, SIGNAL(clicked(const QModelIndex &)), this, SLOT(onTableClicked(const QModelIndex &)));
-
-
-                    # elif column == 4:
-
-                        # self.table.setItem(row, column, self.lbl)
-
-                    elif column == 5:
-
-                        combo = QComboBox()
-                        combo.addItem('')
-                        combo.addItem("FoTan")
-                        combo.addItem("YauMaTei")
-                        combo.addItem("ShekMun")
-
-                        self.table.setCellWidget(row, column, combo)
-                    else:
-                        item = QTableWidgetItem('')
-                        self.table.setItem(row, column, item)
-                        # self.table.addAction()
+            # Set column 5 location dropdown list
+            combo = QComboBox()
+            combo.addItem('')
+            combo.addItem("FoTan")
+            combo.addItem("YauMaTei")
+            combo.addItem("ShekMun")
+            self.table.setCellWidget(row, 5, combo)  # hardcode
 
         self.datelabel = QLabel('Date:')
         self.datelabel.setFont(QFont('SansSerif', 14))
