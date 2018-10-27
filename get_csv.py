@@ -168,6 +168,8 @@ class Content(QWidget):
         # self.vbox1.setStretch(1,1)
         self.setLayout(self.vbox1)
 
+    location_labels = ('', 'F', 'Y', 'S')
+
     def handleSave(self):
         path = QFileDialog.getSaveFileName(self, 'Save File', '.csv', 'CSV(*.csv)')[0]
 
@@ -180,7 +182,7 @@ class Content(QWidget):
                 rowdata = []
                 rowdata.extend(('Name', 'Starting Time', 'Duration', 'Booking Date', 'Booking Time', 'Booking Location'))
                 rowdata.append('%s' % self.time_of_the_day.text())
-                rowdata.append('%s' % ('', 'F', 'Y', 'S')[self.location.currentIndex()])
+                rowdata.append('%s' % location_labels[self.location.currentIndex()])
                 writer.writerow(rowdata)
 
                 for row in range(1, self.table.rowCount()):
@@ -190,14 +192,10 @@ class Content(QWidget):
                             item = self.table.cellWidget(row, column)
 
                             # this is setting the location
-                            if item is not None and item.currentIndex() == 0:
-                                rowdata.append('')
-                            elif item.currentIndex() == 1:
-                                rowdata.append("F")
-                            elif item.currentIndex() == 2:
-                                rowdata.append('Y')
+                            if item is not None:
+                                rowdata.append(location_labels[item.currentIndex()])
                             else:
-                                rowdata.append('S')
+                                rowdata.append('')
 
                         elif column == 3:
                             item = self.table.cellWidget(row, column)
