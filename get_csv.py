@@ -195,11 +195,11 @@ class Content(QWidget):
                                 item = self.table.cellWidget(row, column)
 
                                 # this is setting the location
-                                if item is not None and str(item.currentIndex()) == '0':
+                                if item is not None and item.currentIndex() == 0:
                                     rowdata.append('')
-                                elif str(item.currentIndex()) == '1':
+                                elif item.currentIndex()) == 1:
                                     rowdata.append("F")
-                                elif str(item.currentIndex()) == '2':
+                                elif item.currentIndex() == 2:
                                     rowdata.append('Y')
                                 else:
                                     rowdata.append('S')
