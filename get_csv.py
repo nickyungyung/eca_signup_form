@@ -76,13 +76,12 @@ class UI_Window(QMainWindow):
 
 
 class Content(QWidget):
-
     def __init__(self, rows, columns):
         super().__init__()
 
-        # self.calendar = Calendar()
         self.table = QTableWidget(rows, columns, self)
         self.table.setHorizontalHeaderLabels(['Name', 'Starting Time', 'Duration (Hrs)', 'Booking Date (MM-DD)', 'Booking Time', 'Booking Location'])
+
         header = self.table.horizontalHeader()
         header.setFont(QFont('SansSerif', 14))
         header.setSectionResizeMode(0, QHeaderView.Stretch)
@@ -123,7 +122,7 @@ class Content(QWidget):
 
             # Set column 3 calender button
             btn = QPushButton('Choose Time')
-            btn.clicked.connect(partial(self.calendar, row, 3))  # hardcode
+            btn.clicked.connect(partial(self.showCalendar, row))
             self.table.setCellWidget(row, 3, btn)  # hardcode
 
             # Set column 5 location dropdown list
@@ -258,60 +257,26 @@ class Content(QWidget):
         except FileNotFoundError:
             pass
 
-    def calendar(self, row, column):
-
-        d = QDialog()
+    def showCalendar(self, row):
+        dialog = QDialog()
         vbox1 = QVBoxLayout()
 
-        self.cal = QCalendarWidget()
-        self.cal.setGridVisible(True)
+        cal = QCalendarWidget()
+        cal.setGridVisible(True)
+        cal.clicked[QDate].connect(partial(self.setDate, row, cal))
 
-        # date = self.cal.selectedDate()
-        # cal.clicked[QDate].connect(self.showDate(date))
+        vbox1.addWidget(cal)
 
-        self.cal.clicked[QDate].connect(partial(self.trigger_signal, row, column))
-        # date =
+        dialog.setLayout(vbox1)
+        dialog.exec()
 
-        # def trigger_signal(self):
+    def setDate(self, row, cal):
+        date = cal.selectedDate()
+        self.table.cellWidget(row, 3).setText((date.toString()))
 
-        #     # determine when to trigger
-        #     trigger = pyqtSignal()
-
-        #     # connect to the handle trigger function in self.table
-        #     self.trigger.connect(self.handle_trigger)
-
-        vbox1.addWidget(self.cal)
-
-        # self.lbl = QLabel(self)
-        # self.lbl.setText(date.toString())
-        # vbox1.addWidget(self.lbl)
-
-        d.setLayout(vbox1)
-        d.exec_()
-
-    def trigger_signal(self, row, column):
-        self.date = self.cal.selectedDate()
-        print(self.date)
-        # date = cal
-        self.table.setItem(row, column, QTableWidgetItem(self.date.toString()))
-        print(self.date.toString())
-
-    # def showDate(self, date, row,column):
-    #     pass
-
-    # def getInteger(self, row, column):
-    #     i, okPressed = QInputDialog.getInt(self, "Get integer","Percentage:", 28, 0, 100, 1)
-    #     if okPressed:
-    #         self.integer = i
-    #         self.row = row
-    #         self.column = column
-    #         self.e.updatedateApp.emit()
-
-    # def updateInteger(self):
-    #     self.table.setItem(self.row, self.column, QTableWidgetItem(self.integer))
 
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     ex = UI_Window()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
