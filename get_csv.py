@@ -263,7 +263,11 @@ class Content(QWidget):
 
         cal = QCalendarWidget()
         cal.setGridVisible(True)
+
+        # single click
         cal.clicked[QDate].connect(partial(self.setDate, row, cal))
+        # double click
+        cal.activated[QDate].connect(partial(self.setDateAndClose, row, cal, dialog))
 
         vbox1.addWidget(cal)
 
@@ -274,6 +278,9 @@ class Content(QWidget):
         date = cal.selectedDate()
         self.table.cellWidget(row, 3).setText((date.toString()))
 
+    def setDateAndClose(self, row, cal, dialog):
+        self.setDate(row, cal)
+        dialog.close()
 
 
 if __name__ == '__main__':
