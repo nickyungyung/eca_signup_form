@@ -94,16 +94,13 @@ class Content(QWidget):
         # header.setSectionResizeMode(6, QHeaderView.ResizeToContents)
         header.setStretchLastSection(True)
 
-
         b = ['Student' for j in range(1,rows)]
         b.insert(0, 'Example')
         self.table.setVerticalHeaderLabels(b)
 
         # index = self.table.verticalHeader()
         # for i in range(rows):
-
         #     index.setSectionResizeMode(i, QHeaderView.ResizeToContents)
-
 
         # self.table.setSelection
         self.table.setFont(QFont('SansSerif', 12))
@@ -179,51 +176,49 @@ class Content(QWidget):
         try:
             with open(path, 'w', encoding='big5-hkscs') as stream:
                 writer = csv.writer(stream)
-                for row in range(0, self.table.rowCount()):
-                    if row == 0:
-                        rowdata = []
-                        rowdata.extend(('Name', 'Starting Time', 'Duration', 'Booking Date', 'Booking Time', 'Booking Location'))
-                        rowdata.append('%s' %self.time_of_the_day.text())
-                        rowdata.append('%s' %['', 'F', 'Y', 'S'][self.location.currentIndex()])
-                        writer.writerow(rowdata)
 
-                    else:
-                        rowdata = []
-                        for column in range(self.table.columnCount()):
-                            if column == 5:
+                rowdata = []
+                rowdata.extend(('Name', 'Starting Time', 'Duration', 'Booking Date', 'Booking Time', 'Booking Location'))
+                rowdata.append('%s' % self.time_of_the_day.text())
+                rowdata.append('%s' % ('', 'F', 'Y', 'S')[self.location.currentIndex()])
+                writer.writerow(rowdata)
 
-                                item = self.table.cellWidget(row, column)
+                for row in range(1, self.table.rowCount()):
+                    for column in range(self.table.columnCount()):
+                        if column == 5:
 
-                                # this is setting the location
-                                if item is not None and item.currentIndex() == 0:
-                                    rowdata.append('')
-                                elif item.currentIndex()) == 1:
-                                    rowdata.append("F")
-                                elif item.currentIndex() == 2:
-                                    rowdata.append('Y')
-                                else:
-                                    rowdata.append('S')
+                            item = self.table.cellWidget(row, column)
 
-                            elif column == 3:
-                                item = self.table.cellWidget(row, column)
-
-                                # this is setting the location
-                                if str(item.text()) != 'Choose Time':
-                                    rowdata.append(str(item.text()))
-                                elif str(item.text()) == 'Choose Time':
-                                    rowdata.append('')
-                                else:
-                                    rowdata.append('')
-
+                            # this is setting the location
+                            if item is not None and item.currentIndex() == 0:
+                                rowdata.append('')
+                            elif item.currentIndex() == 1:
+                                rowdata.append("F")
+                            elif item.currentIndex() == 2:
+                                rowdata.append('Y')
                             else:
-                                item = self.table.item(row, column)
-                                if item is not None and str(item.text()) != 'Enter':
-                                    rowdata.append(str(item.text()))
-                                elif str(item.text()) == 'Enter':
-                                    rowdata.append('')
-                                else:
-                                    rowdata.append('')
-                        writer.writerow(rowdata)
+                                rowdata.append('S')
+
+                        elif column == 3:
+                            item = self.table.cellWidget(row, column)
+
+                            # this is setting the location
+                            if item.text() != 'Choose Time':
+                                rowdata.append(item.text())
+                            elif item.text() == 'Choose Time':
+                                rowdata.append('')
+                            else:
+                                rowdata.append('')
+
+                        else:
+                            item = self.table.item(row, column)
+                            if item is not None and str(item.text()) != 'Enter':
+                                rowdata.append(str(item.text()))
+                            elif str(item.text()) == 'Enter':
+                                rowdata.append('')
+                            else:
+                                rowdata.append('')
+                    writer.writerow(rowdata)
 
             self.saved = 1
             # self.e.updatedateApp.emit()
@@ -232,7 +227,6 @@ class Content(QWidget):
 
     def handleOpen(self):
         path = QFileDialog.getOpenFileName(self, 'Open File', '.csv', 'CSV(*.csv)')[0]
-
 
         try:
             with open(path, 'r', encoding='big5-hkscs') as stream:
