@@ -6,14 +6,9 @@ from PyQt5.QtCore import *
 import datetime
 from functools import partial
 
-class Communicate(QObject):
-
-    saveApp       = pyqtSignal()
-    updatedateApp = pyqtSignal()
-    # tablesignal =   pyqtSignal()
-
 
 class UI_Window(QMainWindow):
+    saveApp = pyqtSignal()
 
     def __init__(self):
         super().__init__()
@@ -32,32 +27,29 @@ class UI_Window(QMainWindow):
         QToolTip.setFont(QFont('SansSerif', 10))
         self.setToolTip('Click a box and fill in your info')
 
-        self.c = Communicate()
-        self.c.saveApp.connect(self.content.handleSave)
-        # self.c.updatedateApp.connect(self.content.getInteger)
+        self.saveApp.connect(self.content.handleSave)
 
-        self.openAct = QAction('Open', self)
-        self.openAct.setShortcut('Ctrl+O')
-        self.openAct.setStatusTip('Open file, looping multiple instances not recommended, only for minimal changes.')
-        self.openAct.triggered.connect(self.content.handleOpen)
+        openAct = QAction('Open', self)
+        openAct.setShortcut('Ctrl+O')
+        openAct.setStatusTip('Open file, looping multiple instances not recommended, only for minimal changes.')
+        openAct.triggered.connect(self.content.handleOpen)
 
-        self.saveAct = QAction('Save', self)
-        self.saveAct.setShortcut('Ctrl+S')
-        self.saveAct.setStatusTip('Save file')
-        self.saveAct.triggered.connect(self.content.handleSave)
+        saveAct = QAction('Save', self)
+        saveAct.setShortcut('Ctrl+S')
+        saveAct.setStatusTip('Save file')
+        saveAct.triggered.connect(self.content.handleSave)
 
-        # self.exitAct = QAction(QIcon('exit.png'), '&Exit', self)
-        # self.exitAct.setShortcut('Ctrl+Q')
-        # self.exitAct.setStatusTip('Exit application')
-        # self.exitAct.triggered.connect(qApp.quit)
-
+        # exitAct = QAction(QIcon('exit.png'), '&Exit', self)
+        # exitAct.setShortcut('Ctrl+Q')
+        # exitAct.setStatusTip('Exit application')
+        # exitAct.triggered.connect(qApp.quit)
 
         self.menubar = self.menuBar()
 
         self.fileMenu = self.menubar.addMenu('&File')
-        self.fileMenu.addAction(self.openAct)
-        self.fileMenu.addAction(self.saveAct)
-        # self.fileMenu.addAction(self.exitAct)
+        self.fileMenu.addAction(openAct)
+        self.fileMenu.addAction(saveAct)
+        # self.fileMenu.addAction(exitAct)
 
 
         self.setGeometry(300, 300, 1440, 1200)
@@ -74,7 +66,7 @@ class UI_Window(QMainWindow):
             event.accept()
         elif reply == QMessageBox.Save:
 
-            self.c.saveApp.emit()
+            self.saveApp.emit()
             if self.content.saved == 1:
                 event.accept()
             else:
