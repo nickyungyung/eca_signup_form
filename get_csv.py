@@ -8,6 +8,7 @@ from functools import partial
 
 
 class UI_Window(QMainWindow):
+
     saveApp = pyqtSignal()
 
     def __init__(self):
@@ -107,15 +108,15 @@ class Content(QWidget):
         self.table.setItem(0,0,QTableWidgetItem('Eric Yung'))
         self.table.setItem(0,1,QTableWidgetItem('14:00'))         # select
         self.table.setItem(0,2,QTableWidgetItem('2'))             # select
-        self.table.setItem(0,3,QTableWidgetItem('10-15'))         # calendar
+        self.table.setItem(0,3,QTableWidgetItem('Click below to choose'))         # calendar
         # self.table.setItem(0,4,QTableWidgetItem('20-01'))         # calendar
         self.table.setItem(0,4,QTableWidgetItem('14:00-16:00'))   # time range
         self.table.setItem(0,5,QTableWidgetItem('FoTan/ YauMaTei/ ShekMun'))             # selection
 
         # Todo: Replace hardcoded columns with variables
-        for row in range(rows):
+        for row in range(1,rows):
             # Set empty text boxes
-            empty_text_cols = (0, 1, 2, 4)
+            empty_text_cols = (0, 1, 2, 4)   # hardcode
             for col in empty_text_cols:
                 item = QTableWidgetItem('')
                 self.table.setItem(row, col, item)
@@ -135,17 +136,20 @@ class Content(QWidget):
 
         datelabel = QLabel('Date:')
         datelabel.setFont(QFont('SansSerif', 14))
-        time_of_the_day = QLabel('%s' %datetime.datetime.now().date())
-        time_of_the_day.setFont(QFont('SansSerif', 14))
+        self.time_of_the_day = QLabel('%s' %datetime.datetime.now().date())
+        self.time_of_the_day.setFont(QFont('SansSerif', 14))
 
         locationlabel = QLabel("Centre:")
         locationlabel.setFont(QFont('SansSerif', 14))
-        location = QComboBox()
-        location.setFont(QFont('SansSerif', 14))
-        location.addItem('')
-        location.addItem("FoTan")
-        location.addItem("YauMaTei")
-        location.addItem("ShekMun")
+        self.location = QComboBox()
+        self.location.setFont(QFont('SansSerif', 14))
+        self.location.addItem('')
+        self.location.addItem("FoTan")
+        self.location.addItem("YauMaTei")
+        self.location.addItem("ShekMun")
+
+        self.location_labels = ('', 'F', 'Y', 'S')
+
 
         self.vbox1 = QVBoxLayout()
         self.hbox = QHBoxLayout()
@@ -154,12 +158,12 @@ class Content(QWidget):
         # self.vbox1.addStretch(1)
         # self.hbox_firstlay.addStretch(0.5)
         hbox_firstlay.addWidget(datelabel)
-        hbox_firstlay.addWidget(time_of_the_day)
+        hbox_firstlay.addWidget(self.time_of_the_day)
         hbox_firstlay.addStretch(0.5)
 
         # hbox_firstlay.addSpacing(50)
         hbox_firstlay.addWidget(locationlabel)
-        hbox_firstlay.addWidget(location)
+        hbox_firstlay.addWidget(self.location)
 
         self.vbox1.addLayout(hbox_firstlay)
 
@@ -167,8 +171,6 @@ class Content(QWidget):
         self.vbox1.addLayout(self.hbox)
         # self.vbox1.setStretch(1,1)
         self.setLayout(self.vbox1)
-
-    location_labels = ('', 'F', 'Y', 'S')
 
     def handleSave(self):
         path = QFileDialog.getSaveFileName(self, 'Save File', '.csv', 'CSV(*.csv)')[0]
@@ -182,17 +184,19 @@ class Content(QWidget):
                 rowdata = []
                 rowdata.extend(('Name', 'Starting Time', 'Duration', 'Booking Date', 'Booking Time', 'Booking Location'))
                 rowdata.append('%s' % self.time_of_the_day.text())
-                rowdata.append('%s' % location_labels[self.location.currentIndex()])
+                rowdata.append('%s' % self.location_labels[self.location.currentIndex()])
                 writer.writerow(rowdata)
 
+
                 for row in range(1, self.table.rowCount()):
+                    rowdata = []
                     for column in range(self.table.columnCount()):
                         if column == 5:
                             item = self.table.cellWidget(row, column)
 
                             # this is setting the location
                             if item is not None:
-                                rowdata.append(location_labels[item.currentIndex()])
+                                rowdata.append(self.location_labels[item.currentIndex()])
                             else:
                                 rowdata.append('')
 
@@ -264,6 +268,8 @@ class Content(QWidget):
 
         cal = QCalendarWidget()
         cal.setGridVisible(True)
+
+        dialog.setToolTip('Double-click to confirm')
 
         # single click
         cal.clicked[QDate].connect(partial(self.setDate, row, cal))
