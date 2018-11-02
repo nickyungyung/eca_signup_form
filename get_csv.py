@@ -1,10 +1,19 @@
-import sys, csv
-from PyQt5.QtGui import *
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-#  pyqtSignal, QObject, Qt, QDate
+import csv
+import sys
 import datetime
 from functools import partial
+
+
+from PyQt5.QtCore import pyqtSignal, QDate, Qt
+from PyQt5.QtGui import QFont, QIcon
+from PyQt5.QtWidgets import (
+    QApplication,
+    QMainWindow,
+    QWidget, QTableWidget, QCalendarWidget,
+    QTableWidgetItem, QDialog,
+    QAction, QComboBox, QFileDialog, QLabel, QMessageBox, QPushButton, QToolTip,
+    QHeaderView, QHBoxLayout, QVBoxLayout,
+)
 
 
 class UI_Window(QMainWindow):
@@ -51,7 +60,6 @@ class UI_Window(QMainWindow):
         self.fileMenu.addAction(openAct)
         self.fileMenu.addAction(saveAct)
         # self.fileMenu.addAction(exitAct)
-
 
         self.setGeometry(300, 300, 1440, 1200)
         self.setWindowTitle('Timesheet')
