@@ -136,7 +136,7 @@ class Content(QWidget):
 
             # Set column 5 location dropdown list
             combo = QComboBox()
-            combo.addItem('')
+            combo.addItem('')  # use n/a?
             combo.addItem("FoTan")
             combo.addItem("YauMaTei")
             combo.addItem("ShekMun")
@@ -144,20 +144,24 @@ class Content(QWidget):
 
         datelabel = QLabel('Date:')
         datelabel.setFont(QFont('SansSerif', 14))
-        self.time_of_the_day = QLabel('%s' %datetime.datetime.now().date())
-        self.time_of_the_day.setFont(QFont('SansSerif', 14))
+        time_of_the_day = QLabel('%s' %datetime.datetime.now().date())
+        time_of_the_day.setFont(QFont('SansSerif', 14))
 
         locationlabel = QLabel("Centre:")
         locationlabel.setFont(QFont('SansSerif', 14))
-        self.location = QComboBox()
-        self.location.setFont(QFont('SansSerif', 14))
-        self.location.addItem('')
-        self.location.addItem("FoTan")
-        self.location.addItem("YauMaTei")
-        self.location.addItem("ShekMun")
+        location = QComboBox()
+        location.setFont(QFont('SansSerif', 14))
+        location.addItem('')
+        location.addItem("FoTan")
+        location.addItem("YauMaTei")
+        location.addItem("ShekMun")
 
+        # Todo(alan): consider making this a class attr
         self.location_labels = ('', 'F', 'Y', 'S')
 
+        # Todo(alan): refactor these attrs?
+        self.time_of_the_day = time_of_the_day
+        self.location = location
 
         self.vbox1 = QVBoxLayout()
         self.hbox = QHBoxLayout()
@@ -194,7 +198,6 @@ class Content(QWidget):
                 rowdata.append('%s' % self.time_of_the_day.text())
                 rowdata.append('%s' % self.location_labels[self.location.currentIndex()])
                 writer.writerow(rowdata)
-
 
                 for row in range(1, self.table.rowCount()):
                     rowdata = []
